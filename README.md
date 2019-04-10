@@ -1,2 +1,4 @@
 # homegear-mediola-ewickler
-Homegear Miscellaneous plugin for mediola Gateways V5/V5plus to use WIR eWickler
+Homegear Miscellaneous plugin for mediola Gateways V5/V5plus to use WIR eWickler.
+
+This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
