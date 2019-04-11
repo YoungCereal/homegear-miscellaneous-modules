@@ -1,0 +1,29 @@
+#!/bin/sh
+
+case "$1" in
+	remove|abort-install|abort-upgrade)
+		rm -Rf /var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
+		service homegear restart
+		;;
+
+	purge)
+		rm -Rf /var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
+		service homegear restart
+		;;
+
+	disappear)
+		;;
+
+	upgrade)
+		;;
+
+	failed-upgrade)
+		;;
+
+	*) echo "$0: didn't understand being called with \`$1'" 1>&2
+		exit 1;;
+esac
+
+exit 0
+
+#DEBHELPER#

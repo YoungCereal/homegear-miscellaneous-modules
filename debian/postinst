@@ -1,0 +1,56 @@
+#!/bin/sh
+
+case $1 in
+	# Configure this package. If the package must prompt the user for
+	# information, do it here.
+	configure)
+		service homegear start
+		[ $? -ne 0 ] && exit 1
+		RUNNING=0
+		INDEX=0
+        	while [ $RUNNING -eq 0 ] && [ $INDEX -lt 60 ]; do
+                	sleep 1
+	                RUNNING=`netstat -tnlp 2> /dev/null | grep -c homegear`
+	                INDEX=$((INDEX+1))
+	        done
+	        if [ $RUNNING -eq 0 ]; then
+        		echo "Could not create Mediola-eWickler device in Homegear, because Homegear doesn't seem to be running."
+	        	exit 1
+	        fi
+		homegear -e mrl mod_miscellaneous.so
+		[ $? -ne 0 ] && exit 1
+		/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler/Setup.php
+		[ $? -ne 0 ] && exit 1
+		;;
+
+	# Back out of an attempt to upgrade this package FROM THIS VERSION
+	# to version $2. Undo the effects of "prerm upgrade $2".
+	abort-upgrade)
+		service homegear restart
+		;;
+
+	# Back out of an attempt to remove this package, which was due to
+	# a conflict with package $3 (version $4). Undo the effects of
+	# "prerm remove in-favour $3 $4".
+	abort-remove)
+		service homegear restart
+		;;
+
+	# Back out of an attempt to deconfigure this package, which was
+	# due to package $6 (version $7) which we depend on being removed
+	# to make way for package $3 (version $4). Undo the effects of
+	# "prerm deconfigure in-favour $3 $4 removing $6 $7".
+	abort-deconfigure)
+		service homegear restart
+		;;
+
+	*)
+		echo "$0: didn't understand being called with \`$1'" 1>&2
+		exit 1
+		;;
+
+esac
+
+exit 0
+
+#DEBHELPER#
