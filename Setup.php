@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-require_once(__DIR__."/HM-XMLRPC-Client/Client.php");
+require_once(__DIR__."../../HM-XMLRPC-Client/Client.php");
 $port = system("homegear -e rpcservers | grep \"false   none\"");
 $port = (integer)trim(substr($port, 45, 5));
 if(!$port)
