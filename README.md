@@ -7,7 +7,7 @@ For the following devices:
 Name | State
 ------------ | -------------
 WIR eWickler | ( online for Testing )
-Somfy RTS | ( in development )
+Somfy RTS | ( online for Testing )
 FS20 | (in development)
 Intertechno | (in development)
 RF/IR | (in development)

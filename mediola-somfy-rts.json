@@ -1,0 +1,76 @@
+{
+	"Type": "mediola-Somfy-RTS",
+	"SensorActorDefinitions": [{
+			"Type": "UP",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-chevron-up",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 0,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"RowSpan": 1,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Hoch",
+				"en-US": "Up"
+			},
+			"Preview": "Shutter"
+		},
+		{
+			"Type": "DOWN",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-chevron-down",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 4,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Runter",
+				"en-US": "down"
+			}
+		},
+		{
+			"Type": "STOP",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-stop",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 8,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"SetDataPointValue": "true",
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Stop",
+				"en-US": "stop"
+			}
+		}
+	]
+}
