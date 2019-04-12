@@ -19,7 +19,7 @@ case $1 in
 	        fi
 		homegear -e mrl mod_miscellaneous.so
 		[ $? -ne 0 ] && exit 1
-		/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler/Setup.php
+		#/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler/Setup.php
 		[ $? -ne 0 ] && exit 1
 		;;
 

@@ -1,4 +1,4 @@
-Source: homegear-mediola-eWickler
+Source: homegear-mediola
 Maintainer: Michael Landherr <mlandherr@iopdev.org>
 Section: misc
 Priority: optional
@@ -6,7 +6,7 @@ Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 8)
 Homepage: https://homegear.eu
 
-Package: homegear-mediola-eWickler
+Package: homegear-mediola
 Architecture: all
 Section: misc
 Priority: optional

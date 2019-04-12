@@ -13,18 +13,18 @@ override_dh_auto_install:
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	mkdir -p $(CURDIR)/debian/homegear-mediola-ewickler/etc/homegear/devices/254
-	cp $(CURDIR)/Mediola-eWickler.xml $(CURDIR)/debian/homegear-mediola-ewickler/etc/homegear/devices/254
-	chmod 755 $(CURDIR)/debian/homegear-mediola-ewickler/etc/homegear/devices/254
-	chmod 644 $(CURDIR)/debian/homegear-mediola-ewickler/etc/homegear/devices/254/*
+	mkdir -p $(CURDIR)/debian/homegear-mediola/etc/homegear/devices/254
+	cp $(CURDIR)/*.xml $(CURDIR)/debian/homegear-mediola/etc/homegear/devices/254
+	chmod 755 $(CURDIR)/debian/homegear-mediola/etc/homegear/devices/254
+	chmod 644 $(CURDIR)/debian/homegear-mediola/etc/homegear/devices/254/*
   
-	mkdir -p $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/ui/public/device_definitions/default/254
-	cp $(CURDIR)/mediola-ewickler.json $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/ui/public/device_definitions/default/254
-	chmod 755 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/ui/public/device_definitions/default/254
-	chmod 644 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/ui/public/device_definitions/default/254/*
+	mkdir -p $(CURDIR)/debian/homegear-mediola/var/lib/homegear/ui/public/device_definitions/default/254
+	cp $(CURDIR)/*.json $(CURDIR)/debian/homegear-mediola/var/lib/homegear/ui/public/device_definitions/default/254
+	chmod 755 $(CURDIR)/debian/homegear-mediola/var/lib/homegear/ui/public/device_definitions/default/254
+	chmod 644 $(CURDIR)/debian/homegear-mediola/var/lib/homegear/ui/public/device_definitions/default/254/*
 	  
-	# mkdir -p $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
-	# cp -R $(CURDIR)/*.php $(CURDIR)/HM-XMLRPC-Client $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
-	#chmod -R 755 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
+	# mkdir -p $(CURDIR)/debian/homegear-mediola/var/lib/homegear/scripts/DeviceScripts/Mediola
+	# cp -R $(CURDIR)/*.php $(CURDIR)/HM-XMLRPC-Client $(CURDIR)/debian/homegear-mediola/var/lib/homegear/scripts/DeviceScripts/Mediola
+	#chmod -R 755 $(CURDIR)/debian/homegear-mediola/var/lib/homegear/scripts/DeviceScripts/Mediola
 %:
 	dh $@

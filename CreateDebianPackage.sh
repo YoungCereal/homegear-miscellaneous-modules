@@ -16,14 +16,14 @@ then
 fi
 version=$1
 
-rm -Rf homegear-mediola-ewickler*
-mkdir homegear-mediola-ewickler-$version
-cp -R HM-XMLRPC-Client *.php *.xml *.json debian homegear-mediola-ewickler-$version
+rm -Rf homegear-miscellaneous-mediola*
+mkdir homegear-miscellaneous-mediola-$version
+cp -R HM-XMLRPC-Client *.php *.xml *.json debian homegear-miscellaneous-mediola-$version
 date=`LANG=en_US.UTF-8 date +"%a, %d %b %Y %T %z"`
-echo "homegear-mediola-ewickler ($version-$2) $3; urgency=low
+echo "homegear-miscellaneous-mediola ($version-$2) $3; urgency=low
 
 
- -- Michael Landherr  $date" > homegear-mediola-ewickler-$version/debian/changelog
-tar -zcpf homegear-mediola-ewickler_$version.orig.tar.gz homegear-mediola-ewickler-$version
-cd homegear-mediola-ewickler-$version
+ -- Michael Landherr  $date" > homegear-miscellaneous-mediola-$version/debian/changelog
+tar -zcpf homegear-miscellaneous-mediola-$version.orig.tar.gz homegear-miscellaneous-mediola-$version
+cd homegear-miscellaneous-mediola-$version
 debuild -us -uc
