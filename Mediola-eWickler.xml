@@ -44,7 +44,7 @@
 					}
 					
 					public function sendCommand($hg,$cmdUrl){
-					    usleep(random_int(400, 1000));
+					    sleep(random_int(300, 600));
 					    print_debug($hg,2, "CMD_URL:".$cmdUrl);
 					    $json = @file_get_contents($cmdUrl);
 					    $data = json_decode(trim(substr($json,8)),true);
@@ -127,8 +127,8 @@
 				        $thread->synchronized(function($thread){ $thread->wait(5000000); }, $thread);
 				        continue;
 				    }
-				    $sharedData->interval = $config["REQUEST_INTERVAL"];
-				    if($sharedData->interval < 30) $sharedData->interval = 30;
+				    $sharedData->interval = random_int($config["REQUEST_INTERVAL"]+0, $config["REQUEST_INTERVAL"]+5);;
+				    if($sharedData->interval < 30) $sharedData->interval = random_int(30, 40);
 				    
 				    $url = "http://".$config['GATEWAY_IP']."/cmd?XC_FNC=GetStates&auth=".$config['GATEWAY_PASSWORD'];
 				    print_debug($hg,2, $url);
