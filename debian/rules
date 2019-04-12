@@ -23,8 +23,8 @@ override_dh_auto_install:
 	chmod 755 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/ui/public/device_definitions/default/254
 	chmod 644 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/ui/public/device_definitions/default/254/*
 	
-	mkdir -p $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
-	cp -R $(CURDIR)/*.php $(CURDIR)/HM-XMLRPC-Client $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
-	chmod -R 755 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
+	# mkdir -p $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
+	# cp -R $(CURDIR)/*.php $(CURDIR)/HM-XMLRPC-Client $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
+	#chmod -R 755 $(CURDIR)/debian/homegear-mediola-ewickler/var/lib/homegear/scripts/DeviceScripts/Mediola-eWickler
 %:
 	dh $@
