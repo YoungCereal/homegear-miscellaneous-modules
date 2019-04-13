@@ -1,0 +1,52 @@
+{
+	"Type": "Mediola-Infrared",
+	"SensorActorDefinitions": [{
+			"Type": "ON",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-chevron-on",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 0,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"RowSpan": 1,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "An",
+				"en-US": "on"
+			},
+			"Preview": "switch"
+		},
+		{
+			"Type": "OFF",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-chevron-down",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 4,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Aus",
+				"en-US": "off"
+			}
+		}
+	]
+}

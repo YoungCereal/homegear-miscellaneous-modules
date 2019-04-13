@@ -1,8 +1,8 @@
 <homegearDevice version="1">
 	<supportedDevices>
-		<device id="Mediola-Intertechno">
-			<description>mediola Intertechno</description>
-			<typeNumber>0x142</typeNumber>
+		<device id="Mediola-Infrared">
+			<description>mediola Infrared</description>
+			<typeNumber>0x144</typeNumber>
 		</device>
 	</supportedDevices>
 	<runProgram>
@@ -11,17 +11,16 @@
 <![CDATA[<?php
 
 				/* Class to share data between the main script and the event thread.*/
-				define('DEBUG_MEDIOLA_IT', true);
+				define('DEBUG_MEDIOLA_IR', true);
 				
 				function print_debug($hg,$level,$msg) {
-				    if(defined('DEBUG_MEDIOLA_IT') && DEBUG_MEDIOLA_IT){
+				    if(defined('DEBUG_MEDIOLA_IR') && DEBUG_MEDIOLA_IR){
 				        $hg->log($level, $msg);
 				    }
 				}
 				
-				define("cmd_on", "E");
-				define("cmd_off", "6");
-				define("cmd_url", "/cmd?XC_FNC=SendSc&type=IT&data=");
+				define("cmd_on", "");
+				define("cmd_url", "/cmd?XC_FNC=Send2&IR=01&rf=00&data=");
 				define("cmd_url_password", "&auth=");
 				
 				class SharedData extends Threaded{
@@ -72,11 +71,6 @@
 								}elseif($result["VARIABLE"] == 'ON'){
 							        $this->sharedData->interval = 0;
 							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_on.cmd_url_password.$config['GATEWAY_PASSWORD'];
-							        $this->sendCommand($hg,$cmdUrl);
-							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
-							    }elseif($result["VARIABLE"] == 'OFF'){
-							        $this->sharedData->interval = 0;
-							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_off.cmd_url_password.$config['GATEWAY_PASSWORD'];
 							        $this->sendCommand($hg,$cmdUrl);
 							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
 							    }
@@ -139,7 +133,24 @@
 						    	print_debug($hg,3, "Warning: Response from mediola Gateway is empty.");
 								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
 						        continue;
-						    }
+						    }/*
+							$data_value=0;
+							if(is_array($data['XC_SUC'])){
+								for($i=0;$i <= count($data['XC_SUC'])-1;$i++) {
+									if($data['XC_SUC'][$i]['type'] == "IT" && $data['XC_SUC'][$i]['adr'] == $config["ADDRESS_CODE"])
+								    	$data_value = $data['XC_SUC'][$i]['state'];
+								}
+								print_debug($hg,2, "data:".$data_value);
+								if($data_value) $blind_level = hexdec(substr($data_value,2,-2));
+									print_debug($hg,2, "blind_level:".$blind_level);
+									if(is_integer($blind_level)){
+								     	print_debug($hg,2, "mediola-Intertechno ADR:".$config["ADDRESS_CODE"]);
+								        print_debug($hg,2, "LEVEL:".$blind_level);
+								    
+								        $hg->setValue($this->sharedData->peerId, 1, "LEVEL", $blind_level);
+								        $hg->setValue($this->sharedData->peerId, 1, "CURRENT_POSITION", $blind_level);*/
+								    }
+							}*/
 						    $waited = 0;
 						    while($waited < $this->sharedData->interval && !$this->sharedData->stop){
 						    	$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
@@ -202,7 +213,7 @@
 			<properties/>
 			<configParameters>custom_ch0_master</configParameters>
 		</function>
-		<function channel="1" type="Mediola-Intertechno" channelCount="1">
+		<function channel="1" type="Mediola-Infrared" channelCount="1">
 			<properties/>
 			<configParameters>config</configParameters>
 			<variables>custom_ch1_values</variables>
