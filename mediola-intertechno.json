@@ -5,7 +5,7 @@
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
-				"Name": "fa-chevron-on",
+				"Name": "fa-check",
 				"ForValue": "",
 				"HexColor": "",
 				"Size": 50
@@ -30,7 +30,7 @@
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
-				"Name": "fa-chevron-off",
+				"Name": "fa-times",
 				"ForValue": "",
 				"HexColor": "",
 				"Size": 50
