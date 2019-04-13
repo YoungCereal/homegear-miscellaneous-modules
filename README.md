@@ -12,6 +12,9 @@ FS20 | (in development) |	Not Online
 Intertechno | (online for Testing) | In SelfTest 
 RF/IR | (in development) |	Not Online
 
+The modules are only to Send !
+No States for Somfy,FS20,Intertecho,RF,IR
+Only WIR is pulling States.
 
 This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
  

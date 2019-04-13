@@ -151,7 +151,7 @@
 									print_debug($hg,2, "blind_level:".$blind_level);
 									if(is_integer($blind_level)){
 								     	print_debug($hg,2, "mediola-Intertechno ADR:".$config["ADDRESS"]);
-								       /* print_debug($hg,2, "LEVEL:".$blind_level);
+								        print_debug($hg,2, "LEVEL:".$blind_level);
 								    
 								        $hg->setValue($this->sharedData->peerId, 1, "LEVEL", $blind_level);
 								        $hg->setValue($this->sharedData->peerId, 1, "CURRENT_POSITION", $blind_level);*/
@@ -347,8 +347,7 @@
                 <physicalNone>
                     <operationType>store</operationType>
                 </physicalNone>
-            </parameter>
-           
+            </parameter>         
 		</variables>
 	</parameterGroups>
 </homegearDevice>
