@@ -7,8 +7,8 @@
 	</supportedDevices>
 	<runProgram>
 		<startType>permanent</startType>
-		<script>
-			<![CDATA[<?php
+		<script2>
+<![CDATA[<?php
 
 				/* Class to share data between the main script and the event thread.*/
 				define('DEBUG_MEDIOLA_SOMFY', false);
@@ -29,6 +29,9 @@
 				    public $scriptId = 0;
 				    public $peerId = 0;
 				    public $interval = 60;
+				    public $stop = false;
+    				public $eventThread = NULL;
+    				
 				    public function run() {}
 				}
 				
@@ -40,25 +43,26 @@
 					}
 					
 					public function sendCommand($hg,$cmdUrl){
-					    sleep(random_int(300, 600));
+					    usleep(random_int(200000, 400000));
 					    print_debug($hg,2, "CMD_URL:".$cmdUrl);
 					    $json = @file_get_contents($cmdUrl);
 					    $data = json_decode(trim(substr($json,8)),true);
 					    if(!$data){
-					        print_debug($hg,2, "mediola-Somfy-RTS Gateway connection error");
+					        print_debug($hg,2, "mediola-eWickler Gateway connection error");
 					    }
 					}
 				
 					public function run(){
 						/* http://192.168.XX.XX/cmd?XC_FNC=SendSc&type=RT&data=XXXXXXXX&at=XXXXXXXXXXXXXX */	
 						$hg = new \Homegear\Homegear();
+					
 						if($hg->registerThread($this->sharedData->scriptId) === false){
 						    print_debug($hg,2,"Could not register thread.");
 						    return;
 						}
 						$hg->subscribePeer($this->sharedData->peerId);
 				
-				    	while(!$hg->shuttingDown() && $hg->peerExists($this->sharedData->peerId)){
+				    	while(!$this->sharedData->stop){
 							$result = $hg->pollEvent();
 							$config = $hg->getParamset($this->sharedData->peerId, 0, "MASTER");
 							if($result["TYPE"] == "event" && $result["PEERID"] == $this->sharedData->peerId){
@@ -82,6 +86,7 @@
 							        $this->sendCommand($hg,$cmdUrl);
 							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
 							    }
+							    usleep(300000);
 							}elseif($result["TYPE"] == "updateDevice" && $result["PEERID"] == $this->sharedData->peerId){
 								$this->sharedData->interval = 0;
 								$this->synchronized(function($thread){ $thread->notify(); }, $this);
@@ -90,47 +95,94 @@
 					}
 				}
 				
+				class MainThread extends Thread{
+					private $sharedData;
 				
-				$peerId = (integer)$argv[0];
-				$hg = new \Homegear\Homegear();
+					public function __construct($sharedData){
+						$this->sharedData = $sharedData;
+					}
 				
-				$sharedData = new SharedData();
-				$sharedData->peerId = $peerId;
-				$sharedData->scriptId = $hg->getScriptId();
-				$sharedData->address = $hg->getAddress();
-				$thread = new EventThread($sharedData);
-				$thread->start();
+					public function run(){
+						$hg = new \Homegear\Homegear();
+						if($hg->registerThread($this->sharedData->scriptId) === false){
+							print_debug($hg,2,"Could not register thread.");
+							return;
+						}
+						while(!$this->sharedData->stop){
+							$config = $hg->getParamset($this->sharedData->peerId, 0, "MASTER");
+							/* Start */
+							if($config["GATEWAY_IP"] == "" ){
+								print_debug($hg,2, "Error: Peer does not seem to be an mediola Gateway.");
+								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
+								continue;
+							}elseif($config["EWICKLER_ADR"] == ""){
+							    print_debug($hg,2, "Warning: No eWickler address set.");
+							    $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
+							    continue;
+							}elseif($config["GATEWAY_PASSWORD"] == ""){
+								print_debug($hg,2, "Warning: No Gateway Passowrd.");
+								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
+								continue;
+							}
 				
-				while(!$hg->shuttingDown() && $hg->peerExists($peerId)){
-				    $config = $hg->getParamset($peerId, 0, "MASTER");
-				   
-				    /* Start */
-				    if($config["GATEWAY_IP"] == "" ){
-				        print_debug($hg,2, "Error: Peer does not seem to be an mediola Gateway.");
-				        $thread->synchronized(function($thread){ $thread->wait(5000000); }, $thread);
-				        continue;
-				    }elseif($config["EWICKLER_ADR"] == ""){
-				        print_debug($hg,2, "Warning: No SOMFY-RTS address set.");
-				        $thread->synchronized(function($thread){ $thread->wait(5000000); }, $thread);
-				        continue;
-				    }elseif($config["GATEWAY_PASSWORD"] == ""){
-				        print_debug($hg,2, "Warning: No Gateway Passowrd.");
-				        $thread->synchronized(function($thread){ $thread->wait(5000000); }, $thread);
-				        continue;
-				    }
-				    $sharedData->interval = random_int($config["REQUEST_INTERVAL"]+0, $config["REQUEST_INTERVAL"]+5);;
-				    if($sharedData->interval < 30) $sharedData->interval = random_int(30, 40);
-				    
-				    $waited = 0;
-				    while($waited < $sharedData->interval && !$hg->shuttingDown() && $hg->peerExists($peerId)){
-				        $thread->synchronized(function($thread){ $thread->wait(5000000); }, $thread);
-				        $waited += 5;
-				    }
+						    $this->sharedData->interval = random_int($config["REQUEST_INTERVAL"]-5, $config["REQUEST_INTERVAL"]+5);
+						    if($this->sharedData->interval < 30) $sharedData->interval = random_int(25, 35);
+				
+						    $waited = 0;
+						    while($waited < $this->sharedData->interval && !$this->sharedData->stop){
+						    	$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
+						    	$waited += 1;
+						    }
+						}
+					}
 				}
-				$thread->join();
-
-			?>]]>
-		</script>
+				
+				class HomegearDevice extends HomegearDeviceBase{
+					private $hg = NULL;
+					private $peerId = NULL;
+					private $sharedData = NULL;
+					private $mainThread = NULL;
+					private $eventThread = NULL;
+				
+					function __construct(){
+						$this->hg = new \Homegear\Homegear();
+					}
+				
+					function __destruct(){
+						$this->stop();
+						$this->waitForStop();
+					}
+				
+					public function init($peerId) : bool{
+						$this->peerId = $peerId;
+						return true;
+					}
+				
+					public function start() : bool{
+						$this->sharedData = new SharedData();
+						$this->sharedData->peerId = $this->peerId;
+						$this->sharedData->scriptId = $this->hg->getScriptId();
+						$this->eventThread = new EventThread($this->sharedData);
+						$this->eventThread->start();
+						$this->sharedData->eventThread = $this->eventThread;
+						$this->mainThread = new MainThread($this->sharedData);
+						$this->mainThread->start();
+						return true;
+					}
+				
+					public function stop(){
+						if($this->eventThread || $this->mainThread) $this->sharedData->stop = true;
+					}
+				
+					public function waitForStop(){
+						if($this->mainThread) $this->mainThread->join();
+						$this->mainThread = NULL;
+						if($this->eventThread) $this->eventThread->join();
+						$this->eventThread = NULL;
+					}
+				}
+]]>
+		</script2>
 	</runProgram>
 	<properties/>
 	<functions>
