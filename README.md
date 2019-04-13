@@ -10,7 +10,7 @@ WIR eWickler | ( online for Testing ) | Self Tested Working
 Somfy RTS | ( online for Testing ) | Not Tested have no Devices
 FS20 | (in development) |	Not Online
 Intertechno | (online for Testing) | In SelfTest Working
-InfraRed | (online for Testing) |	In SelfTest 
+InfraRed | (online for Testing) |	In SelfTest Working
 RF | (online for Testing) |	In SelfTest Working
 
 The modules are only to Send !
