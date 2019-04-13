@@ -19,7 +19,6 @@
 				    }
 				}
 				
-				define("cmd_on", "");
 				define("cmd_url", "/cmd?XC_FNC=Send2&IR=01&rf=00&data=");
 				define("cmd_url_password", "&auth=");
 				
@@ -133,24 +132,7 @@
 						    	print_debug($hg,3, "Warning: Response from mediola Gateway is empty.");
 								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
 						        continue;
-						    }/*
-							$data_value=0;
-							if(is_array($data['XC_SUC'])){
-								for($i=0;$i <= count($data['XC_SUC'])-1;$i++) {
-									if($data['XC_SUC'][$i]['type'] == "IT" && $data['XC_SUC'][$i]['adr'] == $config["ADDRESS_CODE"])
-								    	$data_value = $data['XC_SUC'][$i]['state'];
-								}
-								print_debug($hg,2, "data:".$data_value);
-								if($data_value) $blind_level = hexdec(substr($data_value,2,-2));
-									print_debug($hg,2, "blind_level:".$blind_level);
-									if(is_integer($blind_level)){
-								     	print_debug($hg,2, "mediola-Intertechno ADR:".$config["ADDRESS_CODE"]);
-								        print_debug($hg,2, "LEVEL:".$blind_level);
-								    
-								        $hg->setValue($this->sharedData->peerId, 1, "LEVEL", $blind_level);
-								        $hg->setValue($this->sharedData->peerId, 1, "CURRENT_POSITION", $blind_level);*/
-								    }
-							}*/
+						    }
 						    $waited = 0;
 						    while($waited < $this->sharedData->interval && !$this->sharedData->stop){
 						    	$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
@@ -327,21 +309,7 @@
                 <physicalNone>
                     <operationType>store</operationType>
                 </physicalNone>
-            </parameter>
-            <parameter id="OFF">
-                <properties>
-                    <writeable>true</writeable>
-                    <addonWriteable>true</addonWriteable>
-                    <unit></unit>
-                    <casts>
-                        <rpcBinary/>
-                    </casts>
-                </properties>
-                <logicalBoolean/>
-                <physicalNone>
-                    <operationType>store</operationType>
-                </physicalNone>
-            </parameter>         
+            </parameter>        
 		</variables>
 	</parameterGroups>
 </homegearDevice>

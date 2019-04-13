@@ -18,7 +18,7 @@
 				"Grid": true,
 				"Table": false
 			},
-			"ShowName": "false",
+			"ShowName": "true",
 			"Name": {
 				"de-DE": "An",
 				"en-US": "on"
@@ -42,7 +42,7 @@
 				"Grid": true,
 				"Table": false
 			},
-			"ShowName": "false",
+			"ShowName": "true",
 			"Name": {
 				"de-DE": "Aus",
 				"en-US": "off"
