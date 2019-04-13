@@ -1,6 +1,8 @@
 # homegear-miscellaneous-mediola
 Homegear Miscellaneous plugin for mediola Gateways V5/V5plus.
 
+For homegear and EasySmarthome Smartha System
+
 For the following devices:
 
 
