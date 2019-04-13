@@ -5,7 +5,7 @@ For the following devices:
 
 
 Name | State | Version
------------- | -------------
+------------ | ------------- | ------------- 
 WIR eWickler | ( online for Testing ) | Self Tested Working
 Somfy RTS | ( online for Testing ) | Not Tested have no Devices
 FS20 | (in development) |	Not Online
