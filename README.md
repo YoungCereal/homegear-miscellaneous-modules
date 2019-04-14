@@ -10,7 +10,7 @@ Name | State | Version
 ------------ | ------------- | ------------- 
 WIR eWickler | ( online for Testing ) | Self Tested Working
 Somfy RTS | ( online for Testing ) | Not Tested have no Devices
-FS20 | (in development) |	Not Online
+FS20 | (online for Testing) |	In SelfTest Working
 Intertechno | (online for Testing) | In SelfTest Working
 InfraRed | (online for Testing) |	In SelfTest Working
 RF | (online for Testing) |	In SelfTest Working
@@ -20,14 +20,14 @@ No States for Somfy,FS20,Intertecho,RF,IR
 Only WIR is pulling States.
 
 
-Instructions:
+### Instructions:
 
-> ### Get Intertechno Code From FS20 Remote:
+> #### Get Intertechno Code From FS20 Remote:
 >http://GATEWAYIP/cmd?XC_FNC=SendSC&type=FS20&auth=PASSWORD
 
 
 
-> ### Get Intertechno Code From RF Remote:
+> #### Get Intertechno Code From RF Remote:
 >http://GATEWAYIP/cmd?XC_FNC=SendSC&type=IT&auth=PASSWORD
 >Answer:
 >{"XC_SUC": {"CODE":"03000E"}}
@@ -36,13 +36,13 @@ Instructions:
 
 
 
-> ### Lern RF Code:
+> #### Lern RF Code:
 >http://GATEWAYIP/cmd?XC_FNC=Learn&auth=PASSWORD
 >Answer:
 >{"XC_SUC": {"CODE":"19082601000200000100DE58800101010000000000000100000000"}}
 >The Value in CODE must be copy for RF ADDRESS_CODE Field.
 
-> ### Learn IR Code:
+> #### Learn IR Code:
 >http://GATEWAYIP/cmd?XC_FNC=Learn&auth=PASSWORD
 >Answer:
 >{"XC_SUC": {"CODE":"19082601000200000100DE58800101010000000000000100000000"}}

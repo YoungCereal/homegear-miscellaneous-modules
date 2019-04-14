@@ -206,22 +206,6 @@
 	<parameterGroups>
 		<configParameters id="config"/>
 		<configParameters id="custom_ch0_master">
-			<parameter id="REQUEST_INTERVAL">
-				<properties>
-					<unit>s</unit>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalInteger>
-					<minimumValue>30</minimumValue>
-					<maximumValue>900</maximumValue>
-					<defaultValue>120</defaultValue>
-				</logicalInteger>
-				<physicalInteger>
-					<operationType>config</operationType>
-				</physicalInteger>
-			</parameter>
 			<parameter id="GATEWAY_IP">
 				<properties>
 					<unit></unit>

@@ -5,7 +5,7 @@
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
-				"Name": "fa-check",
+				"Name": "fa-check fa-4x",
 				"ForValue": "",
 				"HexColor": "",
 				"Size": 50
@@ -21,7 +21,7 @@
 			"ShowName": "true",
 			"Name": {
 				"de-DE": "An",
-				"en-US": "on"
+				"en-US": "On"
 			},
 			"Preview": "switch"
 		},
@@ -30,13 +30,14 @@
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
-				"Name": "fa-times",
+				"Name": "fa-times fa-4x",
 				"ForValue": "",
 				"HexColor": "",
 				"Size": 50
 			}],
 			"Column": 4,
 			"Row": 0,
+			"Align": "center",
 			"ColumnSpan": 4,
 			"View": {
 				"Grid": true,
@@ -45,7 +46,7 @@
 			"ShowName": "true",
 			"Name": {
 				"de-DE": "Aus",
-				"en-US": "off"
+				"en-US": "Off"
 			}
 		}
 	]

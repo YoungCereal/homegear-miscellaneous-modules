@@ -1,8 +1,8 @@
 <homegearDevice version="1">
 	<supportedDevices>
-		<device id="Mediola-Somfy-RTS">
-			<description>mediola Somfy-RTS</description>
-			<typeNumber>0x141</typeNumber>
+		<device id="Mediola-FS20">
+			<description>mediola FS20</description>
+			<typeNumber>0x143</typeNumber>
 		</device>
 	</supportedDevices>
 	<runProgram>
@@ -11,18 +11,37 @@
 <![CDATA[<?php
 
 				/* Class to share data between the main script and the event thread.*/
-				define('DEBUG_MEDIOLA_SOMFY', false);
+				define('DEBUG_MEDIOLA_FS20', true);
 				
 				function print_debug($hg,$level,$msg) {
-				    if(defined('DEBUG_MEDIOLA_SOMFY') && DEBUG_MEDIOLA_SOMFY){
+				    if(defined('DEBUG_MEDIOLA_FS20') && DEBUG_MEDIOLA_IT){
 				        $hg->log($level, $msg);
 				    }
 				}
 				
-				define("cmd_up", "20");
-				define("cmd_down", "40");
-				define("cmd_stop", "10");
-				define("cmd_url", "/cmd?XC_FNC=SendSc&type=RT&data=");
+				
+				define("cmd_on", "1000");
+				define("cmd_off", "0000");
+				define("cmd_toggle", "1200");
+				define("cmd_on_last_save", "1100");
+				
+				
+				define("cmd_dim_up", "1300");
+				define("cmd_dim_down", "1400");
+				define("cmd_dim_10", "0200");
+				define("cmd_dim_20", "0300");
+				define("cmd_dim_30", "0500");
+				define("cmd_dim_40", "0600");
+				define("cmd_dim_50", "0800");
+				define("cmd_dim_60", "0900");
+				define("cmd_dim_70", "0B00");
+				define("cmd_dim_80", "0D00");
+				define("cmd_dim_90", "0E00");
+				define("cmd_dim_100", "1000");
+				
+				
+				
+				define("cmd_url", "/cmd?XC_FNC=SendSc&type=FS20&data=");
 				define("cmd_url_password", "&auth=");
 				
 				class SharedData extends Threaded{
@@ -53,7 +72,7 @@
 					}
 				
 					public function run(){
-						/* http://192.168.XX.XX/cmd?XC_FNC=SendSc&type=RT&data=XXXXXXXX&at=XXXXXXXXXXXXXX */	
+						/* http://192.168.XX.XX/command?XC_FNC=SendSC&type=IT&data=046 */	
 						$hg = new \Homegear\Homegear();
 					
 						if($hg->registerThread($this->sharedData->scriptId) === false){
@@ -70,22 +89,37 @@
 								if($result["VARIABLE"] == "REQUEST"){
 									$this->sharedData->interval = 0;
 									$this->synchronized(function($thread){ $thread->notify(); }, $this);
-								}elseif($result["VARIABLE"] == 'UP'){
+								}elseif($result["VARIABLE"] == 'ON'){
+							        $this->sharedData->interval = 0;
+							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_on.cmd_url_password.$config['GATEWAY_PASSWORD'];
+							        $this->sendCommand($hg,$cmdUrl);
+							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
+							    }elseif($result["VARIABLE"] == 'OFF'){
+							        $this->sharedData->interval = 0;
+							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_off.cmd_url_password.$config['GATEWAY_PASSWORD'];
+							        $this->sendCommand($hg,$cmdUrl);
+							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
+							    }elseif($result["VARIABLE"] == 'TOGGLE'){
+							        $this->sharedData->interval = 0;
+							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_toggle.cmd_url_password.$config['GATEWAY_PASSWORD'];
+							        $this->sendCommand($hg,$cmdUrl);
+							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
+							    }elseif($result["VARIABLE"] == 'DIMUP'){
+							        $this->sharedData->interval = 0;
+							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_dim_up.cmd_url_password.$config['GATEWAY_PASSWORD'];
+							        $this->sendCommand($hg,$cmdUrl);
+							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
+							    }elseif($result["VARIABLE"] == 'DIMDOWN'){
+							        $this->sharedData->interval = 0;
+							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_dim_down.cmd_url_password.$config['GATEWAY_PASSWORD'];
+							        $this->sendCommand($hg,$cmdUrl);
+							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
+							    }elseif($result["VARIABLE"] == 'LEVEL' && $hg->getValue($this->sharedData->peerId, 1, "LEVEL") != $hg->getValue($this->sharedData->peerId, 1, "CURRENT_POSITION")){
 								    $this->sharedData->interval = 0;
-								    $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.cmd_up.$config['ADDRESS_CODE'].cmd_url_password.$config['GATEWAY_PASSWORD'];
-							        $this->sendCommand($hg,$cmdUrl);
+								   /* $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.control_motor.$config['ADDRESS_CODE'].cmd_channel.cmd_level.dechex($hg->getValue($this->sharedData->peerId, 1, "LEVEL")).cmd_url_password.$config['GATEWAY_PASSWORD'];
+								    $this->sendCommand($hg,$cmdUrl);*/
 							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
-							    }elseif($result["VARIABLE"] == 'DOWN'){
-							        $this->sharedData->interval = 0;
-							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.cmd_down.$config['ADDRESS_CODE'].cmd_url_password.$config['GATEWAY_PASSWORD'];
-							        $this->sendCommand($hg,$cmdUrl);
-							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
-							    }elseif($result["VARIABLE"] == 'STOP'){
-							        $this->sharedData->interval = 0;
-							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.cmd_stop.$config['ADDRESS_CODE'].cmd_url_password.$config['GATEWAY_PASSWORD'];
-							        $this->sendCommand($hg,$cmdUrl);
-							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
-							    }
+								}
 							    usleep(300000);
 							}elseif($result["TYPE"] == "updateDevice" && $result["PEERID"] == $this->sharedData->peerId){
 								$this->sharedData->interval = 0;
@@ -116,7 +150,7 @@
 								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
 								continue;
 							}elseif($config["ADDRESS_CODE"] == ""){
-							    print_debug($hg,2, "Warning: No eWickler address set.");
+							    print_debug($hg,2, "Warning: No Intertechno address set.");
 							    $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
 							    continue;
 							}elseif($config["GATEWAY_PASSWORD"] == ""){
@@ -128,6 +162,41 @@
 						    $this->sharedData->interval = random_int($config["REQUEST_INTERVAL"]-5, $config["REQUEST_INTERVAL"]+5);
 						    if($this->sharedData->interval < 30) $sharedData->interval = random_int(25, 35);
 				
+							$url = "http://".$config['GATEWAY_IP']."/cmd?XC_FNC=GetStates&auth=".$config['GATEWAY_PASSWORD'];
+							print_debug($hg,2, $url);
+						    for($i = 0; $i < 3; $i++){
+								usleep(random_int(300000, 400000));
+								$json = @file_get_contents($url);
+								if($json) break;
+							}
+							if(!$json){
+						    	print_debug($hg,3, "Warning: Response from mediola Gateway is empty.");
+								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
+						        continue;
+						    }
+						    $data = json_decode((string)$json,true);
+						    if(!$data || count($data) == 0){
+						    	print_debug($hg,3, "Warning: Response from mediola Gateway is empty.");
+								$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
+						        continue;
+						    }
+							/*$data_value=0;
+							if(is_array($data['XC_SUC'])){
+								for($i=0;$i <= count($data['XC_SUC'])-1;$i++) {
+									if($data['XC_SUC'][$i]['type'] == "FS20" && $data['XC_SUC'][$i]['adr'] == $config["ADDRESS_CODE"])
+								    	$data_value = $data['XC_SUC'][$i]['state'];
+								}
+								print_debug($hg,2, "data:".$data_value);
+								if($data_value) $blind_level = hexdec(substr($data_value,2,-2));
+									print_debug($hg,2, "blind_level:".$blind_level);
+									if(is_integer($blind_level)){
+								     	print_debug($hg,2, "mediola-Intertechno ADR:".$config["ADDRESS_CODE"]);
+								        print_debug($hg,2, "LEVEL:".$blind_level);
+								    
+								        $hg->setValue($this->sharedData->peerId, 1, "LEVEL", $blind_level);
+								        $hg->setValue($this->sharedData->peerId, 1, "CURRENT_POSITION", $blind_level);
+								    }
+							}*/
 						    $waited = 0;
 						    while($waited < $this->sharedData->interval && !$this->sharedData->stop){
 						    	$this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
@@ -190,7 +259,7 @@
 			<properties/>
 			<configParameters>custom_ch0_master</configParameters>
 		</function>
-		<function channel="1" type="Mediola-Somfy-RTS" channelCount="1">
+		<function channel="1" type="Mediola-FS20" channelCount="1">
 			<properties/>
 			<configParameters>config</configParameters>
 			<variables>custom_ch1_values</variables>
@@ -200,6 +269,22 @@
 	<parameterGroups>
 		<configParameters id="config"/>
 		<configParameters id="custom_ch0_master">
+			<parameter id="REQUEST_INTERVAL">
+				<properties>
+					<unit>s</unit>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalInteger>
+					<minimumValue>30</minimumValue>
+					<maximumValue>900</maximumValue>
+					<defaultValue>120</defaultValue>
+				</logicalInteger>
+				<physicalInteger>
+					<operationType>config</operationType>
+				</physicalInteger>
+			</parameter>
 			<parameter id="GATEWAY_IP">
 				<properties>
 					<unit></unit>
@@ -275,7 +360,7 @@
 					</packet>
 				</packets>
 			</parameter>
-            <parameter id="UP">
+            <parameter id="ON">
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
@@ -289,7 +374,7 @@
                     <operationType>store</operationType>
                 </physicalNone>
             </parameter>
-            <parameter id="DOWN">
+            <parameter id="OFF">
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
@@ -303,7 +388,35 @@
                     <operationType>store</operationType>
                 </physicalNone>
             </parameter>
-            <parameter id="STOP">
+            <parameter id="TOGGLE">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalNone>
+                    <operationType>store</operationType>
+                </physicalNone>
+            </parameter>
+            <parameter id="DIMUP">
+                <properties>
+                    <writeable>true</writeable>
+                    <addonWriteable>true</addonWriteable>
+                    <unit></unit>
+                    <casts>
+                        <rpcBinary/>
+                    </casts>
+                </properties>
+                <logicalBoolean/>
+                <physicalNone>
+                    <operationType>store</operationType>
+                </physicalNone>
+            </parameter>
+            <parameter id="DIMDOWN">
                 <properties>
                     <writeable>true</writeable>
                     <addonWriteable>true</addonWriteable>
@@ -354,7 +467,7 @@
 						<type>event</type>
 					</packet>
 				</packets>
-			</parameter>
+			</parameter>           
 		</variables>
 	</parameterGroups>
 </homegearDevice>

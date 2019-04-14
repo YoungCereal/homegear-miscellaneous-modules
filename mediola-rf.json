@@ -5,7 +5,7 @@
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
-				"Name": "fa-check",
+				"Name": "fa-check fa-4x",
 				"ForValue": "",
 				"HexColor": "",
 				"Size": 50
@@ -13,6 +13,7 @@
 			"Column": 0,
 			"Row": 0,
 			"ColumnSpan": 4,
+			"Align": "center",
 			"RowSpan": 1,
 			"View": {
 				"Grid": true,
@@ -20,8 +21,8 @@
 			},
 			"ShowName": "true",
 			"Name": {
-				"de-DE": "An",
-				"en-US": "on"
+				"de-DE": "Senden",
+				"en-US": "Send"
 			},
 			"Preview": "switch"
 		}
