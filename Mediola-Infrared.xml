@@ -19,7 +19,7 @@
 				    }
 				}
 				
-				define("cmd_url", "/cmd?XC_FNC=Send2&IR=01&rf=00&code=");
+				define("cmd_url", "/cmd?XC_FNC=Send2&ir=01&rf=00&code=");
 				define("cmd_url_password", "&auth=");
 				
 				class SharedData extends Threaded{
@@ -45,7 +45,7 @@
 					    $json = @file_get_contents($cmdUrl);
 					    $data = json_decode(trim(substr($json,8)),true);
 					    if(!$data){
-					        print_debug($hg,2, "mediola-eWickler Gateway connection error");
+					        print_debug($hg,2, "mediola-Infrared Gateway connection error");
 					    }
 					}
 				
@@ -69,7 +69,7 @@
 									$this->synchronized(function($thread){ $thread->notify(); }, $this);
 								}elseif($result["VARIABLE"] == 'ON'){
 							        $this->sharedData->interval = 0;
-							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_on.cmd_url_password.$config['GATEWAY_PASSWORD'];
+							        $cmdUrl="http://".$config['GATEWAY_IP'].cmd_url.$config['ADDRESS_CODE'].cmd_url_password.$config['GATEWAY_PASSWORD'];
 							        $this->sendCommand($hg,$cmdUrl);
 							        $this->synchronized(function($thread){ $thread->notify(); }, $this);
 							    }
