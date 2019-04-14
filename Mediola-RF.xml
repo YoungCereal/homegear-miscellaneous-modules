@@ -19,7 +19,7 @@
 				    }
 				}
 				
-				define("cmd_url", "/cmd?XC_FNC=Send2&IR=00&rf=01&data=");
+				define("cmd_url", "/cmd?XC_FNC=Send2&IR=00&rf=01&code=");
 				define("cmd_url_password", "&auth=");
 				
 				class SharedData extends Threaded{
