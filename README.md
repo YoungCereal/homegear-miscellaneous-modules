@@ -22,12 +22,12 @@ Only WIR is pulling States.
 
 Instructions:
 
->###Get Intertechno Code From FS20 Remote:
+> ### Get Intertechno Code From FS20 Remote:
 >http://GATEWAYIP/cmd?XC_FNC=SendSC&type=FS20&auth=PASSWORD
 
 
 
->###Get Intertechno Code From RF Remote:
+> ### Get Intertechno Code From RF Remote:
 >http://GATEWAYIP/cmd?XC_FNC=SendSC&type=IT&auth=PASSWORD
 >Answer:
 >{"XC_SUC": {"CODE":"03000E"}}
@@ -36,15 +36,13 @@ Instructions:
 
 
 
->###Lern RF Code:
-
+> ### Lern RF Code:
 >http://GATEWAYIP/cmd?XC_FNC=Learn&auth=PASSWORD
 >Answer:
 >{"XC_SUC": {"CODE":"19082601000200000100DE58800101010000000000000100000000"}}
 >The Value in CODE must be copy for RF ADDRESS_CODE Field.
 
->###Learn IR Code:
-
+> ### Learn IR Code:
 >http://GATEWAYIP/cmd?XC_FNC=Learn&auth=PASSWORD
 >Answer:
 >{"XC_SUC": {"CODE":"19082601000200000100DE58800101010000000000000100000000"}}
