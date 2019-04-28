@@ -2,6 +2,8 @@
 	"Type": "mediola-eWickler",
 	"SensorActorDefinitions": [{
 			"Type": "UP",
+			"Alexa": "true",
+			"Google": "true",
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
@@ -27,6 +29,8 @@
 		},
 		{
 			"Type": "DOWN",
+			"Alexa": "true",
+			"Google": "true",
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{
@@ -50,6 +54,8 @@
 		},
 		{
 			"Type": "STOP",
+			"Alexa": "true",
+			"Google": "true",
 			"AdditionalIdentifier": "1",
 			"Layout": "IconButton",
 			"Icon": [{

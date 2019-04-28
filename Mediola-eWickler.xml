@@ -10,7 +10,9 @@
 		<script2>
 <![CDATA[<?php
 
-				/* Class to share data between the main script and the event thread.*/
+				/* Class to share data between the main script and the event thread.
+					XC_FNC=refreshSc&type=WR&adr=
+				*/
 				define('DEBUG_MEDIOLA_WR', true);
 				
 				function print_debug($hg,$level,$msg) {
@@ -168,9 +170,12 @@
 									if(is_integer($blind_level)){
 								     	print_debug($hg,2, "mediola-eWickler ADR:".$config["EWICKLER_ADR"]);
 								        print_debug($hg,2, "LEVEL:".$blind_level);
-								    
-								        $hg->setValue($this->sharedData->peerId, 1, "LEVEL", $blind_level);
-								        $hg->setValue($this->sharedData->peerId, 1, "CURRENT_POSITION", $blind_level);
+								        
+								        
+								    	if($hg->getValue($this->sharedData->peerId, 1, "LEVEL") !=$blind_level){
+								        	$hg->setValue($this->sharedData->peerId, 1, "LEVEL", $blind_level);
+								        	$hg->setValue($this->sharedData->peerId, 1, "CURRENT_POSITION", $blind_level);
+								        }
 								    }
 							}
 						    $waited = 0;
