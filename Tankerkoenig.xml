@@ -232,7 +232,7 @@ class HomegearDevice extends HomegearDeviceBase
 			<properties/>
 			<configParameters>custom_ch0_master</configParameters>
 		</function>
-		<function channel="1" type="TankkoenigPos" channelCount="5">
+		<function channel="1" type="STATION" channelCount="5">
 			<properties/>
 			<configParameters>config</configParameters>
 			<variables>custom_ch1_values</variables>
