@@ -1,5 +1,6 @@
 # homegear-miscellaneous-mediola
 Homegear Miscellaneous plugin for mediola Gateways V5/V5plus.
+Renamming in the Future there no more only Mediola Plugins in it.
 
 For homegear and EasySmarthome Smartha System
 
@@ -49,4 +50,13 @@ Only WIR is pulling States.
 >The Value in CODE must be copy for RF ADDRESS_CODE Field.
 
 
+### For Tankerkoenig.de ( Beta )
+You Need a Tankerkoenig. api Key from https://creativecommons.tankerkoenig.de/
+
+Beta Testing.
+
+You have 5 Channels for Stations
+
+
 This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
+

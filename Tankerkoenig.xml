@@ -99,13 +99,13 @@ class MainThread extends Thread
             
             
             if($config["API_KEY"] != ""){
-               
+                
                 $url = "https://creativecommons.tankerkoenig.de/json/list.php?lat=".$config['GEO_LAT']."&lng=".$config['GEO_LON']."&rad=".$config['RAD_KM']."&sort=price&type=".$config['GAS_TYPE']."&apikey=".$config['API_KEY'];
                 $hg->log(3, "URL:  ".$url);
                 for($i = 0; $i < 3; $i++){
-                  $json = @file_get_contents($url);
-                  if($json) break;
-                 }
+                    $json = @file_get_contents($url);
+                    if($json) break;
+                }
             }
             if(!$json)
             {
@@ -122,95 +122,107 @@ class MainThread extends Thread
             }
             if($data['status']== "ok"){
                 
-                $i=1;    
-                  
-                   foreach($data["stations"] as $value){
-					  if($i <=3){
-                    	$hg->log(3, "Brand: ".  $value["brand"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "LAST_DATA", time());
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_BRAND",  $value["brand"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_ID",  $value["id"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_NAME",  $value["name"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_STREET",  $value["street"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_HOUSENR",  $value["houseNumber"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_POSTCODE",  $value["postCode"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_PLACE",  $value["place"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_DIST", $value["dist"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_PRICE",  $value["price"]);
-                        $hg->setValue($this->sharedData->peerId, $i, "STATION_OPEN",  $value["open"]);
-					}
-						$i++;
-                    }
-                }
-                else
-                {
-                    $hg->log(2, "Error: City or country not found.");
-                    //  $hg->setValue($this->sharedData->peerId, 1, "CITY_LONGITUDE", 0.0);
-                    //  $hg->setValue($this->sharedData->peerId, 1, "CITY_LATITUDE", 0.0);
-                    
-                }
+                $i=1;
                 
-                $waited = 0;
-                while($waited < $this->sharedData->interval && !$this->sharedData->stop)
-                {
-                    $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
-                    $waited += 1;
+                foreach($data["stations"] as $value){
+                    if($i <=5){
+                        $hg->log(3, "Brand: ".  $value["brand"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "LAST_DATA", time());
+                        
+                        if (!is_array($value["brand"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_BRAND", $value["brand"]);
+                        if (!is_array($value["id"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_ID",  $value["id"]);
+                        if (!is_array($value["name"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_NAME",  $value["name"]);
+                        if (!is_array($value["street"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_STREET",  $value["street"]);
+                        if (!is_array($value["houseNumber"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_HOUSENR",  $value["houseNumber"]);
+                        if (!is_array($value["postCode"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_POSTCODE",  $value["postCode"]);
+                        if (!is_array($value["place"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_PLACE",  $value["place"]);
+                        if (!is_array($value["dist"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_DIST", $value["dist"]);
+                        if (!is_array($value["price"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_PRICE",  $value["price"]);
+                        if (!is_array($value["isOpen"]))
+                            $hg->setValue($this->sharedData->peerId, $i, "STATION_OPEN",  $value["isOpen"]);
+                                                                
+                    }
+                    $i++;
                 }
+            }
+            else
+            {
+                $hg->log(2, "Error: City or country not found.");
+                //  $hg->setValue($this->sharedData->peerId, 1, "CITY_LONGITUDE", 0.0);
+                //  $hg->setValue($this->sharedData->peerId, 1, "CITY_LATITUDE", 0.0);
+                
+            }
+            
+            $waited = 0;
+            while($waited < $this->sharedData->interval && !$this->sharedData->stop)
+            {
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
+                $waited += 1;
             }
         }
     }
+}
+
+class HomegearDevice extends HomegearDeviceBase
+{
+    private $hg = NULL;
+    private $peerId = NULL;
+    private $sharedData = NULL;
+    private $mainThread = NULL;
+    private $eventThread = NULL;
     
-    class HomegearDevice extends HomegearDeviceBase
+    function __construct()
     {
-        private $hg = NULL;
-        private $peerId = NULL;
-        private $sharedData = NULL;
-        private $mainThread = NULL;
-        private $eventThread = NULL;
-        
-        function __construct()
-        {
-            $this->hg = new \Homegear\Homegear();
-        }
-        
-        function __destruct()
-        {
-            $this->stop();
-            $this->waitForStop();
-        }
-        
-        public function init($peerId) : bool
-        {
-            $this->peerId = $peerId;
-            return true;
-        }
-        
-        public function start() : bool
-        {
-            $this->sharedData = new SharedData();
-            $this->sharedData->peerId = $this->peerId;
-            $this->sharedData->scriptId = $this->hg->getScriptId();
-            $this->eventThread = new EventThread($this->sharedData);
-            $this->eventThread->start();
-            $this->sharedData->eventThread = $this->eventThread;
-            $this->mainThread = new MainThread($this->sharedData);
-            $this->mainThread->start();
-            return true;
-        }
-        
-        public function stop()
-        {
-            if($this->eventThread || $this->mainThread) $this->sharedData->stop = true;
-        }
-        
-        public function waitForStop()
-        {
-            if($this->mainThread) $this->mainThread->join();
-            $this->mainThread = NULL;
-            if($this->eventThread) $this->eventThread->join();
-            $this->eventThread = NULL;
-        }
+        $this->hg = new \Homegear\Homegear();
     }
+    
+    function __destruct()
+    {
+        $this->stop();
+        $this->waitForStop();
+    }
+    
+    public function init($peerId) : bool
+    {
+        $this->peerId = $peerId;
+        return true;
+    }
+    
+    public function start() : bool
+    {
+        $this->sharedData = new SharedData();
+        $this->sharedData->peerId = $this->peerId;
+        $this->sharedData->scriptId = $this->hg->getScriptId();
+        $this->eventThread = new EventThread($this->sharedData);
+        $this->eventThread->start();
+        $this->sharedData->eventThread = $this->eventThread;
+        $this->mainThread = new MainThread($this->sharedData);
+        $this->mainThread->start();
+        return true;
+    }
+    
+    public function stop()
+    {
+        if($this->eventThread || $this->mainThread) $this->sharedData->stop = true;
+    }
+    
+    public function waitForStop()
+    {
+        if($this->mainThread) $this->mainThread->join();
+        $this->mainThread = NULL;
+        if($this->eventThread) $this->eventThread->join();
+        $this->eventThread = NULL;
+    }
+}
 ]]>
 		</script2>
 	</runProgram>
@@ -220,20 +232,10 @@ class MainThread extends Thread
 			<properties/>
 			<configParameters>custom_ch0_master</configParameters>
 		</function>
-		<function channel="1" type="TankkoenigPos1" channelCount="1">
+		<function channel="1" type="TankkoenigPos" channelCount="5">
 			<properties/>
 			<configParameters>config</configParameters>
 			<variables>custom_ch1_values</variables>
-		</function>
-		<function channel="2" type="TankkoenigPos2" channelCount="1">
-			<properties/>
-			<configParameters>config</configParameters>
-			<variables>custom_ch2_values</variables>
-		</function>
-		<function channel="3" type="TankkoenigPos3" channelCount="1">
-			<properties/>
-			<configParameters>config</configParameters>
-			<variables>custom_ch3_values</variables>
 		</function>
 	</functions>
 	<packets/>
@@ -402,326 +404,6 @@ class MainThread extends Thread
 					<operationType>store</operationType>
 				</physicalString>
 			</parameter>			
-			<parameter id="STATION_HOUSENR">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_POSTCODE">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalDecimal/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>
-			<parameter id="STATION_PLACE">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>			
-			<parameter id="STATION_DIST">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalDecimal/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>			
-			<parameter id="STATION_PRICE">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalDecimal/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>	
-			<parameter id="STATION_OPEN">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalBoolean/>
-				<physicalBoolean>
-					<operationType>store</operationType>
-				</physicalBoolean>
-			</parameter>		
-		</variables>
-		<variables id="custom_ch2_values">
-			<parameter id="REQUEST">
-				<properties>
-					<readable>false</readable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalAction/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>
-			<parameter id="LAST_DATA">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<unit>s</unit>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalInteger>
-					<minimumValue>0</minimumValue>
-				</logicalInteger>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>			
-			<parameter id="STATION_BRAND">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_ID">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_NAME">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_STREET">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_HOUSENR">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_POSTCODE">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalDecimal/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>
-			<parameter id="STATION_PLACE">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>			
-			<parameter id="STATION_DIST">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalDecimal/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>			
-			<parameter id="STATION_PRICE">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalDecimal/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>	
-			<parameter id="STATION_OPEN">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalBoolean/>
-				<physicalBoolean>
-					<operationType>store</operationType>
-				</physicalBoolean>
-			</parameter>		
-		</variables>
-		<variables id="custom_ch3_values">
-			<parameter id="REQUEST">
-				<properties>
-					<readable>false</readable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalAction/>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>
-			<parameter id="LAST_DATA">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<unit>s</unit>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalInteger>
-					<minimumValue>0</minimumValue>
-				</logicalInteger>
-				<physicalInteger>
-					<operationType>store</operationType>
-				</physicalInteger>
-			</parameter>			
-			<parameter id="STATION_BRAND">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_ID">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_NAME">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
-			<parameter id="STATION_STREET">
-				<properties>
-					<writeable>false</writeable>
-					<addonWriteable>true</addonWriteable>
-					<casts>
-						<rpcBinary/>
-					</casts>
-				</properties>
-				<logicalString/>
-				<physicalString>
-					<operationType>store</operationType>
-				</physicalString>
-			</parameter>
 			<parameter id="STATION_HOUSENR">
 				<properties>
 					<writeable>false</writeable>
