@@ -122,24 +122,25 @@ class MainThread extends Thread
             }
             if($data['status']== "ok"){
                 
-               // $i=0;    
+                $i=1;    
                   
-                   // foreach($data["stations"] as $value){
-
-                    	$hg->log(3, "Brand: ". $data["stations"][0]["brand"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "LAST_DATA", time());
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_BRAND", $data["stations"][0]["brand"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_ID", $data["stations"][0]["id"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_NAME", $data["stations"][0]["name"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_STREET", $data["stations"][0]["street"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_HOUSENR", $data["stations"][0]["houseNumber"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_POSTCODE", $data["stations"][0]["postCode"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_PLACE", $data["stations"][0]["place"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_DIST", $data["stations"][0]["dist"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_PRICE", $data["stations"][0]["price"]);
-                        $hg->setValue($this->sharedData->peerId, 1, "STATION_OPEN", $data["stations"][0]["open"]);
-
-                    
+                   foreach($data["stations"] as $value){
+					  if($i <=3){
+                    	$hg->log(3, "Brand: ".  $value["brand"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "LAST_DATA", time());
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_BRAND",  $value["brand"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_ID",  $value["id"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_NAME",  $value["name"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_STREET",  $value["street"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_HOUSENR",  $value["houseNumber"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_POSTCODE",  $value["postCode"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_PLACE",  $value["place"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_DIST", $value["dist"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_PRICE",  $value["price"]);
+                        $hg->setValue($this->sharedData->peerId, $i, "STATION_OPEN",  $value["open"]);
+					}
+						$i++;
+                    }
                 }
                 else
                 {
