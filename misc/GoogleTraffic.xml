@@ -385,10 +385,10 @@ class HomegearDevice extends HomegearDeviceBase
 						<rpcBinary/>
 					</casts>
 				</properties>
-				<logicalString/>
-				<physicalString>
+				<logicalInteger/>
+				<physicalInteger>
 					<operationType>store</operationType>
-				</physicalString>
+				</physicalInteger>
 			</parameter>
 			<parameter id="DISTANCE-TEXT">
 				<properties>
@@ -411,10 +411,10 @@ class HomegearDevice extends HomegearDeviceBase
 						<rpcBinary/>
 					</casts>
 				</properties>
-				<logicalString/>
-				<physicalString>
+				<logicalInteger/>
+				<physicalInteger>
 					<operationType>store</operationType>
-				</physicalString>
+				</physicalInteger>
 			</parameter>
 			<parameter id="DURATION-TEXT">
 				<properties>
@@ -437,10 +437,10 @@ class HomegearDevice extends HomegearDeviceBase
 						<rpcBinary/>
 					</casts>
 				</properties>
-				<logicalString/>
-				<physicalString>
+				<logicalInteger/>
+				<physicalInteger>
 					<operationType>store</operationType>
-				</physicalString>
+				</physicalInteger>
 			</parameter>
 			<parameter id="DURATION-IN-TRAFFIC-TEXT">
 				<properties>
