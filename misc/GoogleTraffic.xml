@@ -112,13 +112,15 @@ class MainThread extends Thread
                     if($json) break;
                 }
             }
+            //$hg->log(3, "JSON:  ".$json);
             if(!$json)
             {
                 $hg->log(3, "Warning: Response from googleapis.com is empty.");
                 $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
                 continue;
             }
-            $data = json_decode($json, true);
+            $data = json_decode($json,true);
+           
             if(!$data || count($data) == 0)
             {
                 $hg->log(3, "Warning: Response from googleapis.com is empty.");
@@ -126,54 +128,27 @@ class MainThread extends Thread
                 continue;
             }
             if($data['status']== "OK"){
-/*
-{
-   "destination_addresses" : [ "Rennbahnstraße 72, 60528 Frankfurt am Main, Deutschland" ],
-   "origin_addresses" : [ "Hainburg, Deutschland" ],
-   "rows" : [
-      {
-         "elements" : [
-            {
-               "distance" : {
-                  "text" : "27,1 km",
-                  "value" : 27108
-               },
-               "duration" : {
-                  "text" : "24 Minuten",
-                  "value" : 1440
-               },
-               "duration_in_traffic" : {
-                  "text" : "23 Minuten",
-                  "value" : 1382
-               },
-               "status" : "OK"
-            }
-         ]
-      }
-   ],
-   "status" : "OK"
-}
-*/
 
 
 
-                        $hg->log(3, "Duration Text: ".  $data['rows']['elements']['duration']['text']);
-                        $hg->setValue($this->sharedData->peerId, $i, "LAST_DATA", time());
+
+                        $hg->log(3, "Duration Text: ".  $data['rows'][0]['elements'][0]['duration']['text']);
+                        $hg->setValue($this->sharedData->peerId, 1, "LAST_DATA", time());
                         
-                        if (!is_array($data['rows']['elements']['distance']['text'])){
-                            $hg->setValue($this->sharedData->peerId, 1, "DISTANCE", $data['rows']['elements']['distance']['value']);
-                            $hg->setValue($this->sharedData->peerId, 1, "DISTANCE-TEXT", $data['rows']['elements']['distance']['text']);
+                        if (!is_array($data['rows'][0]['elements'][0]['distance']['text'])){
+                            $hg->setValue($this->sharedData->peerId, 1, "DISTANCE", $data['rows'][0]['elements'][0]['distance']['value']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DISTANCE-TEXT", $data['rows'][0]['elements'][0]['distance']['text']);
                         
                         }
                         
                         if (!is_array($data['rows']['elements']['duration']['text'])){
-                            $hg->setValue($this->sharedData->peerId, 1, "DURATION",  $data['rows']['elements']['duration']['value']);
-                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-TEXT",  $data['rows']['elements']['duration']['text']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION",  $data['rows'][0]['elements'][0]['duration']['value']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-TEXT",  $data['rows'][0]['elements'][0]['duration']['text']);
                         }
                         
                         if (!is_array($data['rows']['elements']['duration_in_traffic']['text'])){
-                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-IN-TRAFFIC",  $data['rows']['elements']['duration_in_traffic']['value']);
-                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-IN-TRAFFIC-TEXT",  $data['rows']['elements']['duration_in_traffic']['text']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-IN-TRAFFIC",  $data['rows'][0]['elements'][0]['duration_in_traffic']['value']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-IN-TRAFFIC-TEXT",  $data['rows'][0]['elements'][0]['duration_in_traffic']['text']);
                         }
                             
                 
@@ -252,7 +227,7 @@ class HomegearDevice extends HomegearDeviceBase
 	</runProgram>
 	<properties/>
 	<functions>
-		<function channel="0" type="" channelCount="1">
+		<function channel="0" type="SETUP" channelCount="1">
 			<properties/>
 			<configParameters>custom_ch0_master</configParameters>
 		</function>
