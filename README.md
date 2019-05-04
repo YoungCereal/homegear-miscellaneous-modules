@@ -61,7 +61,7 @@ You have 5 Channels for Stations
 ### For Google Traffic ( Beta )
 
 You Need a  API Manager https://console.developers.google.com/apis/
-From Google to get Traffic Data.
+From Google to get Traffic Data. One Key only Works once Per Day but you can use Two or More Keys for Different Routes.
 
 
 
