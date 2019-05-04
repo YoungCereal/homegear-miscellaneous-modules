@@ -58,5 +58,12 @@ Beta Testing.
 You have 5 Channels for Stations
 
 
+### For Google Traffic ( Beta )
+
+You Need a  API Manager https://console.developers.google.com/apis/
+From Google to get Traffic Data.
+
+
+
 This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
 

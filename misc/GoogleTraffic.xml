@@ -1,0 +1,485 @@
+<homegearDevice version="1">
+	<supportedDevices>
+		<device id="GoogleTraffic">
+			<description>GoogleTraffic</description>
+			<typeNumber>0x112</typeNumber>
+		</device>
+	</supportedDevices>
+	<runProgram>
+		<startType>permanent</startType>
+		<script2>
+<![CDATA[<?php
+/**
+ * Class to share data between the main script and the event thread.
+ */
+class SharedData extends Threaded
+{
+    public $scriptId = 0;
+    public $peerId = 0;
+    public $interval = 86400;
+    public $stop = false;
+    public $eventThread = NULL;
+    
+    public function run() {}
+}
+
+class EventThread extends Thread
+{
+    private $sharedData;
+    
+    public function __construct($sharedData)
+    {
+        $this->sharedData = $sharedData;
+    }
+    
+    public function run()
+    {
+        $hg = new \Homegear\Homegear();
+        if($hg->registerThread($this->sharedData->scriptId) === false)
+        {
+            $hg->log(2, "Could not register thread.");
+            return;
+        }
+        $hg->subscribePeer($this->sharedData->peerId);
+        while(!$this->sharedData->stop)
+        {
+            $result = $hg->pollEvent();
+            if($result["TYPE"] == "event" && $result["PEERID"] == $this->sharedData->peerId)
+            {
+                if($result["VARIABLE"] == "REQUEST")
+                {
+                    $this->sharedData->interval = 0;
+                    $this->synchronized(function($thread){ $thread->notify(); }, $this);
+                }
+            }
+            else if($result["TYPE"] == "updateDevice" && $result["PEERID"] == $this->sharedData->peerId)
+            {
+                $this->sharedData->interval = 0;
+                $this->synchronized(function($thread){ $thread->notify(); }, $this);
+            }
+        }
+    }
+}
+
+class MainThread extends Thread
+{
+    private $sharedData;
+    
+    public function __construct($sharedData)
+    {
+        $this->sharedData = $sharedData;
+    }
+    
+    public function run()
+    {
+        $hg = new \Homegear\Homegear();
+        if($hg->registerThread($this->sharedData->scriptId) === false)
+        {
+            $hg->log(2, "Could not register thread.");
+            return;
+        }
+        while(!$this->sharedData->stop)
+        {
+            $config = $hg->getParamset($this->sharedData->peerId, 0, "MASTER");
+            if($config["ORIGINS_CITY"] == "")
+            {
+                $hg->log(2, "Error: Peer does not seem to be an googleapis.com device.");
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
+                continue;
+            }
+            if($config["DEST_CITY"] == "")
+            {
+                $hg->log(2, "Error: Peer does not seem to be an googleapis.com device.");
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
+                continue;
+            }            
+            if($config["API_KEY"] == "")
+            {
+                $hg->log(2, "Warning: No API key set.");
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(5000000); }, $this->sharedData->eventThread);
+                continue;
+            }
+            
+            $this->sharedData->interval = $config["REQUEST_INTERVAL"];
+            if($this->sharedData->interval < 3600) $this->sharedData->interval = 3600;
+            
+            
+            if($config["API_KEY"] != ""){                
+                $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$config['ORIGINS_CITY'].",".$config['ORIGINS_STREET']."+".$config['ORIGINS_NR']."&destinations=".$config['DEST_CITY'].",".$config['DEST_STREET']."+".$config['DEST_NR']."&mode=driving&language=de-DE&departure_time=now&key=".$config['API_KEY'];
+                $hg->log(3, "URL:  ".$url);
+                for($i = 0; $i < 3; $i++){
+                    $json = @file_get_contents($url);
+                    if($json) break;
+                }
+            }
+            if(!$json)
+            {
+                $hg->log(3, "Warning: Response from googleapis.com is empty.");
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
+                continue;
+            }
+            $data = json_decode($json, true);
+            if(!$data || count($data) == 0)
+            {
+                $hg->log(3, "Warning: Response from googleapis.com is empty.");
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(10000000); }, $this->sharedData->eventThread);
+                continue;
+            }
+            if($data['status']== "OK"){
+/*
+{
+   "destination_addresses" : [ "Rennbahnstraße 72, 60528 Frankfurt am Main, Deutschland" ],
+   "origin_addresses" : [ "Hainburg, Deutschland" ],
+   "rows" : [
+      {
+         "elements" : [
+            {
+               "distance" : {
+                  "text" : "27,1 km",
+                  "value" : 27108
+               },
+               "duration" : {
+                  "text" : "24 Minuten",
+                  "value" : 1440
+               },
+               "duration_in_traffic" : {
+                  "text" : "23 Minuten",
+                  "value" : 1382
+               },
+               "status" : "OK"
+            }
+         ]
+      }
+   ],
+   "status" : "OK"
+}
+*/
+
+
+
+                        $hg->log(3, "Duration Text: ".  $data['rows']['elements']['duration']['text']);
+                        $hg->setValue($this->sharedData->peerId, $i, "LAST_DATA", time());
+                        
+                        if (!is_array($data['rows']['elements']['distance']['text'])){
+                            $hg->setValue($this->sharedData->peerId, 1, "DISTANCE", $data['rows']['elements']['distance']['value']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DISTANCE-TEXT", $data['rows']['elements']['distance']['text']);
+                        
+                        }
+                        
+                        if (!is_array($data['rows']['elements']['duration']['text'])){
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION",  $data['rows']['elements']['duration']['value']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-TEXT",  $data['rows']['elements']['duration']['text']);
+                        }
+                        
+                        if (!is_array($data['rows']['elements']['duration_in_traffic']['text'])){
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-IN-TRAFFIC",  $data['rows']['elements']['duration_in_traffic']['value']);
+                            $hg->setValue($this->sharedData->peerId, 1, "DURATION-IN-TRAFFIC-TEXT",  $data['rows']['elements']['duration_in_traffic']['text']);
+                        }
+                            
+                
+            }
+            else
+            {
+                $hg->log(2, "Error: City or country not found.");
+                //  $hg->setValue($this->sharedData->peerId, 1, "CITY_LONGITUDE", 0.0);
+                //  $hg->setValue($this->sharedData->peerId, 1, "CITY_LATITUDE", 0.0);
+                
+            }
+            
+            $waited = 0;
+            while($waited < $this->sharedData->interval && !$this->sharedData->stop)
+            {
+                $this->sharedData->eventThread->synchronized(function($thread){ $thread->wait(1000000); }, $this->sharedData->eventThread);
+                $waited += 1;
+            }
+        }
+    }
+}
+
+class HomegearDevice extends HomegearDeviceBase
+{
+    private $hg = NULL;
+    private $peerId = NULL;
+    private $sharedData = NULL;
+    private $mainThread = NULL;
+    private $eventThread = NULL;
+    
+    function __construct()
+    {
+        $this->hg = new \Homegear\Homegear();
+    }
+    
+    function __destruct()
+    {
+        $this->stop();
+        $this->waitForStop();
+    }
+    
+    public function init($peerId) : bool
+    {
+        $this->peerId = $peerId;
+        return true;
+    }
+    
+    public function start() : bool
+    {
+        $this->sharedData = new SharedData();
+        $this->sharedData->peerId = $this->peerId;
+        $this->sharedData->scriptId = $this->hg->getScriptId();
+        $this->eventThread = new EventThread($this->sharedData);
+        $this->eventThread->start();
+        $this->sharedData->eventThread = $this->eventThread;
+        $this->mainThread = new MainThread($this->sharedData);
+        $this->mainThread->start();
+        return true;
+    }
+    
+    public function stop()
+    {
+        if($this->eventThread || $this->mainThread) $this->sharedData->stop = true;
+    }
+    
+    public function waitForStop()
+    {
+        if($this->mainThread) $this->mainThread->join();
+        $this->mainThread = NULL;
+        if($this->eventThread) $this->eventThread->join();
+        $this->eventThread = NULL;
+    }
+}
+]]>
+		</script2>
+	</runProgram>
+	<properties/>
+	<functions>
+		<function channel="0" type="" channelCount="1">
+			<properties/>
+			<configParameters>custom_ch0_master</configParameters>
+		</function>
+		<function channel="1" type="DATA" channelCount="1">
+			<properties/>
+			<configParameters>config</configParameters>
+			<variables>custom_ch1_values</variables>
+		</function>
+	</functions>
+	<packets/>
+	<parameterGroups>
+		<configParameters id="config"/>
+		<configParameters id="custom_ch0_master">
+			<parameter id="REQUEST_INTERVAL">
+				<properties>
+					<unit>s</unit>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalInteger>
+					<minimumValue>3600</minimumValue>
+					<maximumValue>86400</maximumValue>
+					<defaultValue>3600</defaultValue>
+				</logicalInteger>
+				<physicalInteger>
+					<operationType>config</operationType>
+				</physicalInteger>
+			</parameter>
+			<parameter id="API_KEY">
+				<properties>
+					<password>true</password>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="ORIGINS_CITY">
+				<properties>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString>
+					<defaultValue></defaultValue>
+				</logicalString>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="ORIGINS_STREET">
+				<properties>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString>
+					<defaultValue></defaultValue>
+				</logicalString>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="ORIGINS_NR">
+				<properties>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString>
+					<defaultValue></defaultValue>
+				</logicalString>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DEST_CITY">
+				<properties>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString>
+					<defaultValue></defaultValue>
+				</logicalString>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DEST_STREET">
+				<properties>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString>
+					<defaultValue></defaultValue>
+				</logicalString>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DEST_NR">
+				<properties>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString>
+					<defaultValue></defaultValue>
+				</logicalString>
+				<physicalString>
+					<operationType>config</operationType>
+				</physicalString>
+			</parameter>
+		</configParameters>
+		<variables id="custom_ch1_values">
+			<parameter id="REQUEST">
+				<properties>
+					<readable>false</readable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalAction/>
+				<physicalInteger>
+					<operationType>store</operationType>
+				</physicalInteger>
+			</parameter>
+			<parameter id="LAST_DATA">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<unit>s</unit>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalInteger>
+					<minimumValue>0</minimumValue>
+				</logicalInteger>
+				<physicalInteger>
+					<operationType>store</operationType>
+				</physicalInteger>
+			</parameter>			
+			<parameter id="DISTANCE">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>store</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DISTANCE-TEXT">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>store</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DURATION">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>store</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DURATION-TEXT">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>store</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DURATION-IN-TRAFFIC">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>store</operationType>
+				</physicalString>
+			</parameter>
+			<parameter id="DURATION-IN-TRAFFIC-TEXT">
+				<properties>
+					<writeable>false</writeable>
+					<addonWriteable>true</addonWriteable>
+					<casts>
+						<rpcBinary/>
+					</casts>
+				</properties>
+				<logicalString/>
+				<physicalString>
+					<operationType>store</operationType>
+				</physicalString>
+			</parameter>	
+		</variables>
+	</parameterGroups>
+</homegearDevice>
