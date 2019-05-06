@@ -1,4 +1,4 @@
-# homegear-miscellaneous-mediola
+# homegear Development and Testing Modules
 Homegear Miscellaneous plugin for mediola Gateways V5/V5plus.
 Renamming in the Future there no more only Mediola Plugins in it.
 
@@ -71,6 +71,8 @@ From Google to get Traffic Data. One Key only Works once Per Day but you can use
 
 ## node-blue folder
 
+### output-changer
+At Event you can determine the output.
 
 This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
 
