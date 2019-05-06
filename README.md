@@ -23,6 +23,9 @@ Only WIR is pulling States.
 
 ### Instructions:
 
+
+## mediola folder
+
 > #### Get Intertechno Code From FS20 Remote:
 >http://GATEWAYIP/cmd?XC_FNC=SendSC&type=FS20&auth=PASSWORD
 
@@ -50,6 +53,8 @@ Only WIR is pulling States.
 >The Value in CODE must be copy for RF ADDRESS_CODE Field.
 
 
+## misc folder
+
 ### For Tankerkoenig.de ( Beta )
 You Need a Tankerkoenig. api Key from https://creativecommons.tankerkoenig.de/
 
@@ -63,6 +68,8 @@ You have 5 Channels for Stations
 You Need a  API Manager https://console.developers.google.com/apis/
 From Google to get Traffic Data. One Key only Works once Per Day but you can use Two or More Keys for Different Routes.
 
+
+## node-blue folder
 
 
 This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
