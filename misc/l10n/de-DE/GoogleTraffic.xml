@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<homegearDeviceTranslation lang="de-DE">
+  <supportedDevices>
+    <device id="GoogleTraffic">
+      <description>GoogleTraffic</description>
+    </device>
+  </supportedDevices>
+  <parameterGroups xmlns="https://homegear.eu/xmlNamespaces/DeviceType">
+    <configParameters id="GoogleTrafficConfig">
+      <parameter id="API_KEY">
+        <label>Google API-Key</label>
+      </parameter>
+      <parameter id="ORIGINS_CITY">
+        <label>Start Stadt</label>
+      </parameter>
+      <parameter id="ORIGINS_STREET">
+        <label>Strasse</label>
+      </parameter>
+      <parameter id="ORIGINS_NR">
+        <label>Hausnummer</label>
+      </parameter>
+       <parameter id="DEST_CITY">
+        <label>Ankunft Stadt</label>
+      </parameter>
+      <parameter id="DEST_STREET">
+        <label>Strasse</label>
+      </parameter>
+      <parameter id="DEST_NR">
+        <label>Hausnummer</label>
+      </parameter>
+    </configParameters>
+  </parameterGroups>
+</homegearDeviceTranslation>

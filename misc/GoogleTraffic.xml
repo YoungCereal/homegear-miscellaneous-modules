@@ -243,6 +243,8 @@ class HomegearDevice extends HomegearDeviceBase
 		<configParameters id="custom_ch0_master">
 			<parameter id="REQUEST_INTERVAL">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<unit>s</unit>
 					<casts>
 						<rpcBinary/>
@@ -260,6 +262,8 @@ class HomegearDevice extends HomegearDeviceBase
 			<parameter id="API_KEY">
 				<properties>
 					<password>true</password>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
@@ -271,6 +275,8 @@ class HomegearDevice extends HomegearDeviceBase
 			</parameter>
 			<parameter id="ORIGINS_CITY">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
@@ -284,6 +290,8 @@ class HomegearDevice extends HomegearDeviceBase
 			</parameter>
 			<parameter id="ORIGINS_STREET">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
@@ -297,6 +305,8 @@ class HomegearDevice extends HomegearDeviceBase
 			</parameter>
 			<parameter id="ORIGINS_NR">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
@@ -310,6 +320,8 @@ class HomegearDevice extends HomegearDeviceBase
 			</parameter>
 			<parameter id="DEST_CITY">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
@@ -323,6 +335,8 @@ class HomegearDevice extends HomegearDeviceBase
 			</parameter>
 			<parameter id="DEST_STREET">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
@@ -336,6 +350,8 @@ class HomegearDevice extends HomegearDeviceBase
 			</parameter>
 			<parameter id="DEST_NR">
 				<properties>
+          			<formFieldType>text</formFieldType>
+          			<formPosition>0</formPosition>
 					<casts>
 						<rpcBinary/>
 					</casts>
