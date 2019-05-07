@@ -73,6 +73,7 @@
         oneditsave: function() {
             var annot = this.editor.getSession().getAnnotations();
             this.noerr = 0;
+        },
         oneditresize: function(size) {
         }
     });
