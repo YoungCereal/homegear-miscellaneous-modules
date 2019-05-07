@@ -1,6 +1,8 @@
 # homegear Development and Testing Modules
-Homegear Miscellaneous plugin for mediola Gateways V5/V5plus.
-Renamming in the Future there no more only Mediola Plugins in it.
+Homegear Miscellaneous Modules 
+ 
+plugin for mediola Gateways V5/V5plus, tankerkoenig, googletraffic maybe more ;)
+
 
 For homegear and EasySmarthome Smartha System
 
@@ -68,11 +70,6 @@ You have 5 Channels for Stations
 You Need a  API Manager https://console.developers.google.com/apis/
 From Google to get Traffic Data. One Key only Works once Per Day but you can use Two or More Keys for Different Routes.
 
-
-## node-blue folder
-
-### output-changer
-At Event you can determine the output.
 
 This addon extends Homegear with a virtual device in device family "Miscellaneous". The device is created automatically upon installation of the Debian package. After installation you need to modify the configuration parameters of the device according to your needs. Of course you can create multiple devices.
 
