@@ -1,0 +1,173 @@
+{
+	"Type": "VirtualThermostat",
+	"SensorActorDefinitions": [{
+            "Type": "ACTUAL_TEMPERATURE",
+            "AdditionalIdentifier": "1",
+            "Layout": "IconText",
+            "Icon": [{
+              "Name": "fa-thermometer-half fa-4x",
+              "ForValue": "",
+              "HexColor": "",
+              "Size": 50
+            }],
+            "Column": 0,
+            "Row": 0,
+            "ColumnSpan": 5,
+            "Align": "center",
+            "View": {
+                "Grid": true,
+                "Table": true
+            },
+            "Name": {
+              "de-DE": "Aktuelle Temperatur",
+              "en-US": "Actual Temperature"
+            },
+            "ValueRanges": [
+            {
+              "StartValue": -10,
+              "EndValue": 3,
+              "HexColor": "#007bd5"
+            },
+            {
+              "StartValue": 3,
+              "EndValue": 15,
+              "HexColor": "#10ac87"
+            },
+            {
+              "StartValue": 15,
+              "EndValue": 20,
+              "HexColor": "#ffcb1d"
+            },
+            {
+              "StartValue": 20,
+              "EndValue": 25,
+              "HexColor": "#ffa51d"
+            },
+            {
+              "StartValue": 25,
+              "EndValue": 30,
+              "HexColor": "#ff842a"
+            },
+            {
+              "StartValue": 30,
+              "EndValue": 40,
+              "HexColor": "#ff341d"
+            },
+            {
+              "StartValue": 40,
+              "EndValue": 50,
+              "HexColor": "#ff3795"
+            }
+          ],
+          "Preview": "HeatingTemperature",
+          "ValueTextSize": 22,
+          "Unit": "°C",
+          "Min": -10,
+          "Max": 50,
+          "Alexa": "true",
+          "Google": "true"
+        },
+        {
+            "Type": "ACTUAL_HUMIDITY",
+            "AdditionalIdentifier": "1",
+            "Layout": "IconText",
+            "Icon": [{
+              "Name": "fa-tint fa-4x",
+              "ForValue": "",
+              "HexColor": "",
+              "Size": 50
+            }],
+            "Column": 5,
+            "Row": 0,
+            "ColumnSpan": 5,
+            "Align": "center",
+            "View": {
+                "Grid": true,
+                "Table": true
+            },
+            "Name": {
+              "de-DE": "Aktuelle Luftfeuchtigkeit",
+              "en-US": "Actual Humidity"
+            },
+            "ValueRanges": [
+            {
+              "StartValue": 0,
+              "EndValue": 35,
+              "HexColor": "#e7a470"
+            },
+            {
+              "StartValue": 35,
+              "EndValue": 40,
+              "HexColor": "#1DB864"
+            },
+            {
+              "StartValue": 40,
+              "EndValue": 60,
+              "HexColor": "#81b540"
+            },
+            {
+              "StartValue": 60,
+              "EndValue": 65,
+              "HexColor": "#1DB864"
+            },
+            {
+              "StartValue": 65,
+              "EndValue": 99,
+              "HexColor": "#70b3e7"
+            }
+          ],
+          "ValueTextSize": 22,
+          "Min": 0,
+          "Max": 99,
+          "Unit": "%"
+        },
+        {
+            "Type": "BATTLOW",
+            "AdditionalIdentifier": "1",
+            "Layout": "IconText",
+            "Icon": [{
+              "Name": "fa-battery-full fa-1x",
+              "ForValue": "",
+              "HexColor": "",
+              "Size": 15
+            }],
+            "Column": 10,
+            "Row": 0,
+            "ColumnSpan": 2,
+            "Align": "center",
+            "View": {
+                "Grid": true,
+                "Table": true
+            },
+            "Name": {
+              "de-DE": "Batterie",
+              "en-US": "Battery"
+            },
+            "Unit": "V"
+        }, {
+            "Type": "SET_TEMPERATURE",
+            "AdditionalIdentifier": "1",
+            "Alexa": "true",
+            "Google": "true",
+            "Layout": "Slider",
+            "Column": 0,
+            "Row": 1,
+            "ColumnSpan": 12,
+            "Align": "center",
+            "View": {
+                "Grid": true,
+                "Table": true
+            },
+            "Name": {
+              "de-DE": "Soll Temperatur",
+              "en-US": "Set Temperature"
+            },
+            "Min": "4.5",
+            "Max": "30",
+            "Step": 0.5,
+            "SnapToSteps": true,
+            "Unit": "°C",
+            "Preview": "HeatingSetTemperature"
+        }
+	]
+}

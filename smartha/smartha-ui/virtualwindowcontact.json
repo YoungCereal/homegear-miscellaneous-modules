@@ -1,0 +1,45 @@
+{
+	"Type": "VirtualWindowContact",
+	"SensorActorDefinitions": [{
+			"Type": "STATE",
+			"Alexa": "true",
+			"Google": "true",
+			"SetDataPoint": "STATE",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButtonState",
+			"ActiveDatapointValue": "true",
+			"Icon": [{
+				"Name": "fa-power-off fa-4x",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 0,
+			"Row": 0,
+			"ColumnSpan": 2,
+			"Align": "center",
+			"Name": {
+				"de-DE": "Status",
+				"en-US": "State"
+			},
+			"Preview": "Switch",
+			"ShowValueText": "false",
+			"ShowName": "false",
+			"VisibleValueReplacement": [{
+					"ValueToReplace": "true",
+					"ReplaceValueWith": {
+						"de-DE": "An",
+						"en-US": "On"
+					}
+				},
+				{
+					"ValueToReplace": "false",
+					"ReplaceValueWith": {
+						"de-DE": "Aus",
+						"en-US": "Off"
+					}
+				}
+			]
+		}
+	]
+}

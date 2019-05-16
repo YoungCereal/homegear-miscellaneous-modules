@@ -1,0 +1,33 @@
+{
+	"Type": "VirtualDimmer",
+	"SensorActorDefinitions": [{
+			"Type": "LEVEL",
+			"Alexa": "true",
+			"Google": "true",
+			"AdditionalIdentifier": "1",
+			"Layout": "Slider",
+			"Column": 0,
+			"Row": 0,
+			"ColumnSpan": 12,
+			"Align": "center",
+			"Name": {
+				"de-DE": "Helligkeit",
+				"en-US": "Brightness"
+			},
+			"Min": "0",
+			"Max": "100",
+			"Step": 1,
+			"SetValueFormat": "{0} / 100",
+			"SetValueFormatSprintf": "%d / 100",
+			"ValueFormat": {
+				"MathManipulation": "10 * {0} * 10",
+				"MathManipulationSprintf": "100 * %.2f",
+				"OutputStringFormat": "{0:N0} %",
+				"OutputStringFormatSprintf": "%d"
+			},
+			"Unit": "%",
+			"FavoriteValues": "0,25,50,75,100",
+			"IsBusyDatapoint": "WORKING"
+		}
+	]
+}

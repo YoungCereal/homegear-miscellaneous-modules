@@ -1,0 +1,104 @@
+{
+	"Type": "VirtualBlind",
+	"SensorActorDefinitions": [{
+			"Type": "UP",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-chevron-up",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 0,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"RowSpan": 1,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Hoch",
+				"en-US": "Up"
+			},
+			"Preview": "Shutter"
+		},
+		{
+			"Type": "DOWN",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-chevron-down",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 4,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Runter",
+				"en-US": "down"
+			}
+		},
+		{
+			"Type": "STOP",
+			"AdditionalIdentifier": "1",
+			"Layout": "IconButton",
+			"Icon": [{
+				"Name": "fa-stop",
+				"ForValue": "",
+				"HexColor": "",
+				"Size": 50
+			}],
+			"Column": 8,
+			"Row": 0,
+			"ColumnSpan": 4,
+			"View": {
+				"Grid": true,
+				"Table": false
+			},
+			"SetDataPointValue": "true",
+			"ShowName": "false",
+			"Name": {
+				"de-DE": "Stop",
+				"en-US": "stop"
+			}
+		},
+		{
+			"Type": "LEVEL",
+			"Alexa": "true",
+			"Google": "true",
+			"AdditionalIdentifier": "1",
+			"Layout": "Slider",
+			"Column": 0,
+			"Row": 1,
+			"ColumnSpan": 12,
+			"Align": "center",
+			"Name": {
+				"de-DE": "Level",
+				"en-US": "Level"
+			},
+			"Min": "0",
+			"Max": "100",
+			"Step": 1,
+			"SetValueFormat": "{0}/100",
+			"SetValueFormatSprintf": "%d",
+			"ValueFormat": {
+				"MathManipulation": "{0}/100",
+				"MathManipulationSprintf": "%d",
+				"OutputStringFormatSprintf": "%d"
+			},
+			"Unit": "%",
+			"FavoriteValues": "0,25,50,75,100",
+			"IsBusyDatapoint": "WORKING"
+		}
+	]
+}
